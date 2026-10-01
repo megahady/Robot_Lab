@@ -10,10 +10,19 @@ run each robot offline.
 
 ## Browse the catalog
 
-Open [`catalog/INDEX.html`](catalog/INDEX.html) — a gallery of all 68 robots with a
-rendered thumbnail, leg-count badge, and a link to the model XML. The same data is
-available as a table in [`catalog/INDEX.md`](catalog/INDEX.md), and the rendered
-images live in [`catalog/`](catalog/) alongside the model folders (83 PNGs).
+Browse the catalog at **[`catalog/`](catalog/)** — a gallery of all 68 robots with a
+rendered thumbnail, leg-count badge, and a link to the model XML. GitHub renders it
+inline because it is the directory's `README.md`.
+
+Two equivalent copies exist for other contexts:
+
+| File | Use |
+| --- | --- |
+| [`catalog/README.md`](catalog/README.md) | rendered by GitHub — use this on github.com |
+| [`catalog/INDEX.md`](catalog/INDEX.md) | identical table for reading raw |
+| [`catalog/INDEX.html`](catalog/INDEX.html) | standalone gallery for a local browser (GitHub shows HTML as source) |
+
+The rendered images live in [`catalog/`](catalog/) alongside the model folders (83 PNGs).
 
 ## What's inside
 

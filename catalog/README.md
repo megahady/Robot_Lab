@@ -1,343 +1,94 @@
-<h1>
-  <a href="#"><img alt="MuJoCo Menagerie" src="assets/banner.png" width="100%"></a>
-</h1>
+# Robot Catalog
 
-<p>
-  <a href="https://github.com/google-deepmind/mujoco_menagerie/actions/workflows/build.yml?query=branch%3Amain" alt="GitHub Actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/google-deepmind/mujoco_menagerie/build.yml?branch=main">
-  </a>
-  <a href="https://mujoco.readthedocs.io/en/latest/models.html" alt="Documentation">
-    <img src="https://readthedocs.org/projects/mujoco/badge/?version=latest">
-  </a>
-  <a href="https://pypi.org/project/mujoco-menagerie/" alt="PyPI">
-    <img src="https://img.shields.io/pypi/v/mujoco-menagerie">
-  </a>
-  <a href="https://github.com/google-deepmind/mujoco_menagerie/blob/main/CONTRIBUTING.md">
-    <img src="https://img.shields.io/badge/PRs-welcome-green.svg" alt="PRs" height="20">
-  </a>
-</p>
+Browseable gallery of every robot checked out from [google-deepmind/mujoco_menagerie](https://github.com/google-deepmind/mujoco_menagerie) — **68 models**, each in its own `name/` folder with meshes (`assets/`), the primary model file, `README.md`, and `LICENSE`. All robot pictures sit alongside the model folders in this directory (one file per image, named `robot__image.png`).
 
-**Menagerie** is a collection of high-quality models for the
-[MuJoCo](https://github.com/google-deepmind/mujoco) physics engine, curated by
-Google DeepMind.
+**Legs** is an estimate from the joint names of the model files (quadrupeds → 4, bipeds/humanoids → 2, arms and fixed-base arms are blank). **Description** is extracted from the robot's `README.md` overview. Both are best-effort summaries that will later grow to cover the robot's controllers, state estimators, and RL policies.
 
-A physics simulator is only as good as the model it is simulating, and in a
-powerful simulator like MuJoCo with many modeling options, it is easy to create
-"bad" models which do not behave as expected. The goal of this collection is to
-provide the community with a curated library of well-designed models that work
-well right out of the gate.
-
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Overview](#overview)
-  - [Usage](#usage)
-- [Python Package](#python-package)
-- [Model Quality and Contributing](#model-quality-and-contributing)
-  - [Quick contributor setup](#quick-contributor-setup)
-- [Menagerie Models](#menagerie-models)
-- [Citing Menagerie](#citing-menagerie)
-- [Acknowledgments](#acknowledgments)
-- [Changelog](#changelog)
-- [License and Disclaimer](#license-and-disclaimer)
-
-## Getting Started
-
-### Prerequisites
-
-The minimum required MuJoCo version for each model is specified in its
-respective README. You can download prebuilt binaries for MuJoCo from the GitHub
-[releases page](https://github.com/google-deepmind/mujoco/releases/), or if you
-are working with Python, you can install the native bindings from
-[PyPI](https://pypi.org/project/mujoco/) via `pip install mujoco`. For
-alternative installation instructions, see
-[here](https://github.com/google-deepmind/mujoco#installation).
-
-### Overview
-
-The structure of Menagerie is illustrated below. For brevity, we have only
-included one model directory since all others follow the exact same pattern.
-
-```bash
-├── unitree_go2
-│   ├── assets
-│   │   ├── base_0.obj
-│   │   ├── ...
-│   ├── go2.png
-│   ├── go2.xml
-│   ├── LICENSE
-│   ├── README.md
-│   └── scene.xml
-│   └── go2_mjx.xml
-│   └── scene_mjx.xml
-```
-
-- `assets`: stores the 3D meshes (.stl or .obj) of the model used for visual and
-  collision purposes
-- `LICENSE`: describes the copyright and licensing terms of the model
-- `README.md`: contains detailed steps describing how the model's MJCF XML file
-  was generated
-- `<model>.xml`: contains the MJCF definition of the model
-- `scene.xml`: includes `<model>.xml` with a plane, a light source and
-  potentially other objects
-- `<model>.png`: a PNG image of `scene.xml`
-- `<model>_mjx.xml`: contains an MJX-compatible version of the model. Not all
-  models have an MJX variant.
-- `scene_mjx.xml`: same as `scene.xml` but loads the MJX variant
-
-Note that `<model>.xml` solely describes the model, i.e., no other entity is
-defined in the kinematic tree. We leave additional body definitions for the
-`scene.xml` file, as can be seen in the Shadow Hand
-[`scene.xml`](shadow_hand/scene_right.xml).
-
-### Usage
-
-The [Python package](#python-package) is the easiest way to use Menagerie from
-Python. You can also clone this repository in the directory of your choice:
-
-```bash
-git clone https://github.com/google-deepmind/mujoco_menagerie.git
-```
-
-and explore a model interactively using the Python viewer:
-
-```bash
-python -m mujoco.viewer --mjcf mujoco_menagerie/unitree_go2/scene.xml
-```
-
-Menagerie models are also available through the third-party
-[`robot_descriptions`](https://github.com/robot-descriptions/robot_descriptions.py)
-package.
-
-If you have further questions, please check out our [FAQ](FAQ.md).
-
-## Python Package
-
-```bash
-pip install mujoco-menagerie
-```
+The catalog is a plain copy: nothing here is installed, built, or converted. Use it with MuJoCo directly, e.g.
 
 ```python
-import mujoco_menagerie as mm
-
-model = mm.load('unitree_go2')  # downloads once, compiles scene.xml
-spec = mm.get('unitree_go2').spec()  # editable mujoco.MjSpec
+import mujoco
+model = mujoco.MjModel.from_xml_path("src/catalog/unitree_h1/h1.xml")
 ```
 
-Each model is downloaded the first time it is loaded, into a per-user cache,
-and `mujoco-menagerie==2026.9.0` pins every model to that release. To open a
-model straight from the command line, with nothing installed:
+## Index
 
-```bash
-uvx mujoco-menagerie view unitree_go2
-```
+| | Robot | Legs | Model | License | Description |
+|---|---|---|---|---|---|
+| <img src="agilex_piper__piper.png" width="160" alt="agilex_piper"> | **agilex_piper** | — | [`piper.xml`](agilex_piper/piper.xml) | `MIT` | This package contains a simplified robot description (MJCF) of the AgileX PiPER. It is derived from the publicly available model. |
+| <img src="agility_cassie__cassie.png" width="160" alt="agility_cassie"> | **agility_cassie** | 2 | [`cassie.xml`](agility_cassie/cassie.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the Cassie bipedal robot. The original MJCF and assets were provided directly by Agility Robotics under an MIT Licens |
+| <img src="aloha__aloha.png" width="160" alt="aloha"> | **aloha** | — | [`aloha.xml`](aloha/aloha.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the bimanual ALOHA 2 robot. It is derived from the publicly available ViperX 300 6DOF MJCF model. |
+| <img src="anybotics_anymal_b__anymal_b.png" width="160" alt="anybotics_anymal_b"> | **anybotics_anymal_b** | 4 | [`anymal_b.xml`](anybotics_anymal_b/anymal_b.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the ANYmal B robot developed by ANYbotics. It is derived from the publicly available URDF description. |
+| <img src="anybotics_anymal_c__anymal_c.png" width="160" alt="anybotics_anymal_c"> | **anybotics_anymal_c** | 4 | [`anymal_c.xml`](anybotics_anymal_c/anymal_c.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the ANYmal C robot developed by ANYbotics. It is derived from the publicly available URDF description. |
+| <img src="apptronik_apollo__apptronik_apollo.png" width="160" alt="apptronik_apollo"> | **apptronik_apollo** | 2 | [`apptronik_apollo.xml`](apptronik_apollo/apptronik_apollo.xml) | `Apache-2.0` | This package contains a Apptronik Apollo robot description (MJCF). |
+| <img src="arx_l5__arx_l5.png" width="160" alt="arx_l5"> | **arx_l5** | — | [`arx_l5.xml`](arx_l5/arx_l5.xml) | `BSD-3-Clause` | This package contains a simplified robot description (MJCF) of the ARX L5. It is derived from ARX's official model repository. |
+| <img src="berkeley_humanoid__berkeley_humanoid.png" width="160" alt="berkeley_humanoid"> | **berkeley_humanoid** | 2 | [`berkeley_humanoid.xml`](berkeley_humanoid/berkeley_humanoid.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the Berkeley Humanoid developed by the Hybrid Robotics Lab at UC Berkeley. |
+| <img src="bitcraze_crazyflie_2__cf2.png" width="160" alt="bitcraze_crazyflie_2"> | **bitcraze_crazyflie_2** | — | [`cf2.xml`](bitcraze_crazyflie_2/cf2.xml) | `MIT` | This package contains a simplified robot description (MJCF) of the Crazyflie 2 model from Bitcraze. It is derived from the publicly available ROS description. |
+| <img src="booster_t1__t1.png" width="160" alt="booster_t1"> | **booster_t1** | 2 | [`t1.xml`](booster_t1/t1.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the T1 Humanoid Robot developed by Booster Robotics. It is derived from the publicly available URDF description. |
+| <img src="boston_dynamics_spot__spot.png" width="160" alt="boston_dynamics_spot"> | **boston_dynamics_spot** | 4 | [`spot.xml`](boston_dynamics_spot/spot.xml) | `BSD-3-Clause` | This package contains a simplified robot description (MJCF) of the Spot Quadruped developed by Boston Dynamics. It is derived from the publicly available URDF description. |
+| <img src="dynamixel_2r__dynamixel_2r.png" width="160" alt="dynamixel_2r"> | **dynamixel_2r** | — | [`dynamixel_2r.xml`](dynamixel_2r/dynamixel_2r.xml) | `other/see LICENSE` | This package contains a 2R testbench arm featuring MX-106 and MX-64 Dynamixel actuators. |
+| <img src="flexiv_rizon4__flexiv_rizon4.png" width="160" alt="flexiv_rizon4"> | **flexiv_rizon4** | — | [`flexiv_rizon4.xml`](flexiv_rizon4/flexiv_rizon4.xml) | `Apache-2.0` | This package contains a MuJoCo robot description (MJCF) of Rizon4 developed by Flexiv Robotics. |
+| <img src="flexiv_rizon4s__flexiv_rizon4s.png" width="160" alt="flexiv_rizon4s"> | **flexiv_rizon4s** | — | [`flexiv_rizon4s.xml`](flexiv_rizon4s/flexiv_rizon4s.xml) | `Apache-2.0` | This package contains a MuJoCo robot description (MJCF) of Rizon4S developed by Flexiv Robotics. |
+| <img src="flybody__flybody.png" width="160" alt="flybody"> | **flybody** | 2 | [`fruitfly.xml`](flybody/fruitfly.xml) | `Apache-2.0` | flybody is an anatomically-detailed body model of the fruit fly [Drosophila melanogaster]. The fly model was developed in a collaborative effort by Google DeepMind and HHMI Janelia |
+| <img src="fourier_n1__n1.png" width="160" alt="fourier_n1"> | **fourier_n1** | 2 | [`n1.xml`](fourier_n1/n1.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Fourier N1 Humanoid Robot developed by Fourier. It is derived from the Fourier N1 URDF Description. |
+| <img src="franka_emika_panda__panda.png" width="160" alt="franka_emika_panda"> | **franka_emika_panda** | — | [`mjx_panda.xml`](franka_emika_panda/mjx_panda.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Franka Emika Panda developed by Franka Emika. It is derived from the publicly available URDF description. |
+| <img src="franka_fr3__fr3.png" width="160" alt="franka_fr3"> | **franka_fr3** | — | [`fr3.xml`](franka_fr3/fr3.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Franka Research 3 (aka FR3) developed by Franka Robotics (formerly Franka Emika). |
+| <img src="franka_fr3_v2__fr3v2.png" width="160" alt="franka_fr3_v2"> | **franka_fr3_v2** | — | [`fr3v2.xml`](franka_fr3_v2/fr3v2.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Franka Research 3 (aka FR3) developed by Franka Robotics (formerly Franka Emika). |
+| <img src="google_barkour_v0__barkour_v0.png" width="160" alt="google_barkour_v0"> | **google_barkour_v0** | 4 | [`barkour_v0.urdf`](google_barkour_v0/barkour_v0.urdf) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Barkour v0 Quadruped developed by Google. |
+| <img src="google_barkour_vb__barkour_vb.png" width="160" alt="google_barkour_vb"> | **google_barkour_vb** | 4 | [`barkour_vb.xml`](google_barkour_vb/barkour_vb.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Barkour vB Quadruped developed by Google. |
+| <img src="google_robot__robot.png" width="160" alt="google_robot"> | **google_robot** | — | [`robot.xml`](google_robot/robot.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of a mobile manipulator with a 7 degree-of-freedom (DoF) arm and a parallel jaw gripper developed by Google. |
+| <img src="hello_robot_stretch__stretch.png" width="160" alt="hello_robot_stretch"> | **hello_robot_stretch** | — | [`stretch.xml`](hello_robot_stretch/stretch.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the Hello Robot Stretch 2 developed by Hello Robot. The original URDF and assets were provided directly by Hello Robo |
+| <img src="hello_robot_stretch_3__stretch.png" width="160" alt="hello_robot_stretch_3"> | **hello_robot_stretch_3** | — | [`stretch.xml`](hello_robot_stretch_3/stretch.xml) | `Apache-2.0` | This package contains the robot description (MJCF) of the Hello Robot Stretch 3 developed by Hello Robot. This model was directly provided by Hello Robot under the Apache 2.0. |
+| <img src="i2rt_yam__yam.png" width="160" alt="i2rt_yam"> | **i2rt_yam** | — | [`yam.xml`](i2rt_yam/yam.xml) | `MIT` | This package contains a simplified robot description (MJCF) of the YAM robot developed by I2 RT Robotics. It is derived from the publicly available URDF description. |
+| <img src="iit_softfoot__softfoot.png" width="160" alt="iit_softfoot"> | **iit_softfoot** | — | [`softfoot.xml`](iit_softfoot/softfoot.xml) | `other/see LICENSE` | This package is a reproduction of the simplified robot description (MJCF) developed by the by IIT Soft Robotics for Human Cooperation and Rehabilitation group for the Natural Machi |
+| <img src="kinova_gen3__gen3.png" width="160" alt="kinova_gen3"> | **kinova_gen3** | — | [`gen3.xml`](kinova_gen3/gen3.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the Kinova Gen3 developed by Kinova Robotics. It is derived from the publicly available URDF description. |
+| <img src="kuka_iiwa_14__iiwa_14.png" width="160" alt="kuka_iiwa_14"> | **kuka_iiwa_14** | — | [`iiwa14.xml`](kuka_iiwa_14/iiwa14.xml) | `BSD-3-Clause` | This package contains a simplified robot description (MJCF) of the LBR iiwa 14kg developed by KUKA Robotics. It is derived from the publicly available URDF description created by t |
+| <img src="leap_hand__right_hand.png" width="160" alt="leap_hand"> | **leap_hand** | — | [`scene_left.xml`](leap_hand/scene_left.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the (left and right) LEAP Hand developed by Carnegie Mellon University. |
+| <img src="low_cost_robot_arm__low_cost_robot_arm.png" width="160" alt="low_cost_robot_arm"> | **low_cost_robot_arm** | — | [`low_cost_robot_arm.xml`](low_cost_robot_arm/low_cost_robot_arm.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the **Low-Cost Robot Arm** developed originally by Alexander Koch and updated by HuggingFace LeRobot Team with the na |
+| <img src="ms_human_700__ms_human_700.png" width="160" alt="ms_human_700"> | **ms_human_700** | 2 | [`MS-Human-700-Locomotion.xml`](ms_human_700/MS-Human-700-Locomotion.xml) | `Apache-2.0` | This package contains a Human MusculoSkeletal model description (MJCF) of the MS-Human-700 model developed by the LNS Group. |
+| <img src="pal_talos__talos.png" width="160" alt="pal_talos"> | **pal_talos** | 2 | [`talos.xml`](pal_talos/talos.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the TALOS Robot by PAL Robotics. It is derived from the publicly available URDF description. |
+| <img src="pal_tiago__tiago.png" width="160" alt="pal_tiago"> | **pal_tiago** | — | [`scene_velocity.xml`](pal_tiago/scene_velocity.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the TIAGo Robot by PAL Robotics. It is derived from the publicly available URDF description. |
+| <img src="pal_tiago_dual__tiago_dual.png" width="160" alt="pal_tiago_dual"> | **pal_tiago_dual** | — | [`scene_velocity.xml`](pal_tiago_dual/scene_velocity.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the TIAGo++ Robot with omnidirectional base by PAL Robotics. |
+| <img src="pndbotics_adam_lite__adam_lite.png" width="160" alt="pndbotics_adam_lite"> | **pndbotics_adam_lite** | 2 | [`adam_lite.xml`](pndbotics_adam_lite/adam_lite.xml) | `MIT` | This package contains a simplified robot description (MJCF) of the Adam_lite humanoid robot developed by PNDbotics. |
+| <img src="rainbow_robotics_rby1__mujoco_RBY1.png" width="160" alt="rainbow_robotics_rby1"> | **rainbow_robotics_rby1** | — | [`rby1a_1.2.xml`](rainbow_robotics_rby1/rby1a_1.2.xml) | `Apache-2.0` | This package contains MuJoCo MJCF models for RBY1 by Rainbow Robotics, including: - `RBY1-A` base (`1.2`) - `RBY1-M` base (`1.2`, `1.3`) - full gripper and `no_gripper` variants |
+| <img src="realsense_d435i__d435i.png" width="160" alt="realsense_d435i"> | **realsense_d435i** | — | [`d435i.xml`](realsense_d435i/d435i.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Realsense D435i camera developed by Intel. It is derived from the publicly available URDF description with modifi |
+| <img src="rethink_robotics_sawyer__sawyer.png" width="160" alt="rethink_robotics_sawyer"> | **rethink_robotics_sawyer** | — | [`sawyer.xml`](rethink_robotics_sawyer/sawyer.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Sawyer developed by Rethink Robotics. It is derived from the publicly available URDF description. |
+| <img src="robot_soccer_kit__robot_soccer_kit.png" width="160" alt="robot_soccer_kit"> | **robot_soccer_kit** | — | [`robot_soccer_kit.xml`](robot_soccer_kit/robot_soccer_kit.xml) | `other/see LICENSE` | This package contains a robot description (MJCF) of a Robot Soccer Kit omnidirectional robot. All passive wheels (20 per wheel) are simulated as passive joints. |
+| <img src="robotiq_2f85__2f85.png" width="160" alt="robotiq_2f85"> | **robotiq_2f85** | — | [`2f85.xml`](robotiq_2f85/2f85.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the Robotiq 85mm 2-Finger Adaptive Gripper developed by Robotiq. |
+| <img src="robotiq_2f85_v4__2f85.png" width="160" alt="robotiq_2f85_v4"> | **robotiq_2f85_v4** | — | [`2f85.xml`](robotiq_2f85_v4/2f85.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the Robotiq 85mm 2-Finger Adaptive Gripper developed by Robotiq. |
+| <img src="robotis_op3__op3.png" width="160" alt="robotis_op3"> | **robotis_op3** | 2 | [`op3.xml`](robotis_op3/op3.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Robotis OP3 developed by Robotis. It is derived from the publicly available URDF description. |
+| <img src="robotstudio_so101__so101.png" width="160" alt="robotstudio_so101"> | **robotstudio_so101** | — | [`scene_box.xml`](robotstudio_so101/scene_box.xml) | `Apache-2.0` | This package contains a robot description (MJCF) of the The Robot Studio SO101 robot developed by [I2 RT Robotics]. It is derived from the publicly available MJCF. |
+| <img src="seeed_rebot_devarm__seeed_rebot_devarm.png" width="160" alt="seeed_rebot_devarm"> | **seeed_rebot_devarm** | — | [`seeed_rebot_devarm.xml`](seeed_rebot_devarm/seeed_rebot_devarm.xml) | `MIT` | This package contains a robot description (MJCF) of the **reBot DevArm**, a 6-DOF manipulator with a 2-finger parallel gripper built by Seeed Studio around RobStride quasi-direct-d |
+| <img src="shadow_dexee__shadow_dexee.png" width="160" alt="shadow_dexee"> | **shadow_dexee** | — | [`shadow_dexee.xml`](shadow_dexee/shadow_dexee.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the SHADOW-DEX-EE-HAND developed by the Shadow Robot Company. |
+| <img src="shadow_hand__shadow_hand.png" width="160" alt="shadow_hand"> | **shadow_hand** | — | [`keyframes.xml`](shadow_hand/keyframes.xml) | `Apache-2.0` | This package contains assets of the "E3M5" version of the Shadow Hand robot, including both right-handed and left-handed versions. |
+| <img src="sharpa_wave__sharpa_wave.png" width="160" alt="sharpa_wave"> | **sharpa_wave** | — | [`scene_left.xml`](sharpa_wave/scene_left.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the **Sharpa Wave** five-fingered tactile hand developed by Sharpa Robotics. |
+| <img src="skydio_x2__x2.png" width="160" alt="skydio_x2"> | **skydio_x2** | — | [`x2.xml`](skydio_x2/x2.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Skydio X2 drone developed by Skydio. The assets were provided directly by Skydio under the Apache 2.0 License. |
+| <img src="stanford_tidybot__tidybot.png" width="160" alt="stanford_tidybot"> | **stanford_tidybot** | — | [`base.xml`](stanford_tidybot/base.xml) | `MIT` | This package contains a simplified robot description (MJCF) of the Stanford TidyBot developed by Jimmy Wu and collaborators from the Interactive Perception and Robot Learning Lab a |
+| <img src="tetheria_aero_hand_open__aero_hand_open.png" width="160" alt="tetheria_aero_hand_open"> | **tetheria_aero_hand_open** | — | [`scene_right.xml`](tetheria_aero_hand_open/scene_right.xml) | `Apache-2.0` | This package contains a **tendon-driven** robotic hand model for MuJoCo manipulation tasks. The Tetheria Hand features accurate cable-driven actuation with spatial tendons, springs |
+| <img src="toddlerbot_2xc__toddlerbot_2xc.png" width="160" alt="toddlerbot_2xc"> | **toddlerbot_2xc** | 2 | [`scene_mjx.xml`](toddlerbot_2xc/scene_mjx.xml) | `MIT` | This package contains the MJCF of Stanford ToddlerBot (the 2XC variant). |
+| <img src="toddlerbot_2xm__toddlerbot_2xm.png" width="160" alt="toddlerbot_2xm"> | **toddlerbot_2xm** | 2 | [`scene_mjx.xml`](toddlerbot_2xm/scene_mjx.xml) | `MIT` | This package contains the MJCF of Stanford ToddlerBot (the 2XM variant). |
+| <img src="trossen_vx300s__vx300s.png" width="160" alt="trossen_vx300s"> | **trossen_vx300s** | — | [`vx300s.xml`](trossen_vx300s/vx300s.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the ViperX 300 6DOF developed by Trossen Robotics. It is derived from the publicly available URDF description. |
+| <img src="trossen_wx250s__wx250s.png" width="160" alt="trossen_wx250s"> | **trossen_wx250s** | — | [`wx250s.xml`](trossen_wx250s/wx250s.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the WidowX 250 6DOF developed by Trossen Robotics. It is derived from the publicly available URDF description. |
+| <img src="trossen_wxai__trossen_wxai.png" width="160" alt="trossen_wxai"> | **trossen_wxai** | — | [`wxai_follower.xml`](trossen_wxai/wxai_follower.xml) | `BSD-3-Clause` | This package contains a simplified robot description (MJCF) of the Trossen WXAI developed by Trossen Robotics. It is derived from the publicly available URDF description. |
+| <img src="trs_so_arm100__so_arm100.png" width="160" alt="trs_so_arm100"> | **trs_so_arm100** | — | [`so_arm100.xml`](trs_so_arm100/so_arm100.xml) | `Apache-2.0` | This package contains a simplified robot description (MJCF) of the Standard Open Arm-100 developed by The Robot Studio. It is derived from the publicly available URDF description. |
+| <img src="ufactory_lite6__lite6.png" width="160" alt="ufactory_lite6"> | **ufactory_lite6** | — | [`lite6.xml`](ufactory_lite6/lite6.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the Lite 6 developed by UFactory. It is derived from the publicly available URDF description. |
+| <img src="ufactory_xarm7__xarm7.png" width="160" alt="ufactory_xarm7"> | **ufactory_xarm7** | — | [`xarm7.xml`](ufactory_xarm7/xarm7.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the xArm7 arm developed by UFACTORY. It is derived from the publicly available URDF description. |
+| <img src="umi_gripper__umi_gripper.png" width="160" alt="umi_gripper"> | **umi_gripper** | — | [`umi_gripper.xml`](umi_gripper/umi_gripper.xml) | `MIT` | This package contains a simplified robot description (MJCF) of the Universal Manipulation Interface (UMI) Gripper. It is derived from the publicly available gripper model. |
+| <img src="unitree_a1__a1.png" width="160" alt="unitree_a1"> | **unitree_a1** | 4 | [`a1.xml`](unitree_a1/a1.xml) | `BSD-3-Clause` | This package contains a simplified robot description (MJCF) of the A1 Quadruped Robot developed by Unitree Robotics. It is derived from the publicly available URDF description. |
+| <img src="unitree_g1__g1.png" width="160" alt="unitree_g1"> | **unitree_g1** | 2 | [`g1.xml`](unitree_g1/g1.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the G1 Humanoid Robot developed by Unitree Robotics. It is derived from the publicly available MJCF description. |
+| <img src="unitree_go1__go1.png" width="160" alt="unitree_go1"> | **unitree_go1** | 4 | [`go1.xml`](unitree_go1/go1.xml) | `BSD-3-Clause` | This package contains a simplified robot description (MJCF) of the Go1 Quadruped Robot developed by Unitree Robotics. It is derived from the publicly available URDF description. |
+| <img src="unitree_go2__go2.png" width="160" alt="unitree_go2"> | **unitree_go2** | 4 | [`go2.xml`](unitree_go2/go2.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the Go2 Quadruped Robot developed by Unitree Robotics. It is derived from the publicly available URDF description. |
+| <img src="unitree_h1__h1.png" width="160" alt="unitree_h1"> | **unitree_h1** | 2 | [`h1.xml`](unitree_h1/h1.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the H1 Humanoid Robot developed by Unitree Robotics. The original URDF and assets were provided directly by Unitree R |
+| <img src="unitree_z1__z1.png" width="160" alt="unitree_z1"> | **unitree_z1** | — | [`z1.xml`](unitree_z1/z1.xml) | `BSD-3-Clause` | This package contains a simplified robot description (MJCF) of the Z1 manipulator developed by Unitree Robotics. It is derived from the publicly available URDF description. |
+| <img src="universal_robots_ur10e__ur10e.png" width="160" alt="universal_robots_ur10e"> | **universal_robots_ur10e** | — | [`ur10e.xml`](universal_robots_ur10e/ur10e.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the UR10e developed by Universal Robots. It is derived from the publicly available URDF description. |
+| <img src="universal_robots_ur5e__ur5e.png" width="160" alt="universal_robots_ur5e"> | **universal_robots_ur5e** | — | [`ur5e.xml`](universal_robots_ur5e/ur5e.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the UR5e developed by Universal Robots. It is derived from the publicly available URDF description. |
+| <img src="wonik_allegro__allegro_hand.png" width="160" alt="wonik_allegro"> | **wonik_allegro** | — | [`scene_left.xml`](wonik_allegro/scene_left.xml) | `other/see LICENSE` | This package contains a simplified robot description (MJCF) of the Allegro Hand v3 robot developed by Wonik Robotics, including both right-handed and left-handed versions. |
 
-See [`python/DOC.md`](python/DOC.md) for the full API.
+*68 robots · legs & descriptions are auto-extracted by `robot_studio/catalog_index.py` and may need a manual once-over for pose/cable-driven robots like cassie · controller/estimator/RL notes will be added here later*
 
-## Model Quality and Contributing
+---
 
-Our goal is to eventually make all Menagerie models as faithful as possible to
-the real system they are being modeled after. Improving model quality is an
-ongoing effort, and the current state of many models is not necessarily
-as good as it could be.
-
-However, by releasing Menagerie in its current state, we hope to consolidate
-and increase visibility for community contributions. To help Menagerie users
-set proper expectations around the quality of each model, we introduce the
-following grading system:
-
-| Grade | Description                                                 |
-|-------|-------------------------------------------------------------|
-| A+    | Values are the product of proper system identification      |
-| A     | Values are realistic, but have not been properly identified |
-| B     | Stable, but some values are unrealistic                     |
-| C     | Conditionally stable, can be significantly improved         |
-
-The grading system will be applied to each model once a proper system
-identification toolbox is created. We are currently planning to release
-this toolbox later this year.
-
-For more information regarding contributions, for example to add a new model to
-Menagerie, see [CONTRIBUTING](CONTRIBUTING.md).
-
-### Quick contributor setup
-
-Two commands and you're set up. You need [`uv`](https://docs.astral.sh/uv/)
-installed; that's the only prerequisite.
-
-```bash
-make install   # one-time: installs pre-commit + git hook
-make all       # run every check CI runs (lint + format + license + XML + tests)
-```
-
-After `make install`, the fast checks fire automatically on every `git commit`.
-Run `make all` before pushing. See [CONTRIBUTING.md](CONTRIBUTING.md) for the
-full breakdown.
-
-## Menagerie Models
-
-> Click any thumbnail below to open the model in an in-browser MuJoCo viewer powered by [live.mujoco.org](https://live.mujoco.org).
-
-<!-- BEGIN MODELS (auto-generated by `make gallery` — do not edit) -->
-
-**Humanoids.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/unitree_h1/scene.xml' title='Open live preview for Unitree H1'><img src='assets/unitree_h1-h1.png' width=120></a> | Unitree H1 | 19 | [BSD-3-Clause](unitree_h1/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/robotis_op3/scene.xml' title='Open live preview for Robotis OP3'><img src='assets/robotis_op3-op3.png' width=120></a> | Robotis OP3 | 20 | [Apache-2.0](robotis_op3/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/unitree_g1/scene.xml' title='Open live preview for Unitree G1'><img src='assets/unitree_g1-g1.png' width=120></a> | Unitree G1 | 29 | [BSD-3-Clause](unitree_g1/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/pal_talos/scene_position.xml' title='Open live preview for TALOS'><img src='assets/pal_talos-talos.png' width=120></a> | TALOS | 44 | [Apache-2.0](pal_talos/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/booster_t1/scene.xml' title='Open live preview for Booster T1'><img src='assets/booster_t1-t1.png' width=120></a> | Booster T1 | 23 | [Apache-2.0](booster_t1/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/toddlerbot_2xc/scene.xml' title='Open live preview for ToddlerBot 2XC'><img src='assets/toddlerbot_2xc-toddlerbot_2xc.png' width=120></a> | ToddlerBot 2XC | 44 | [MIT](toddlerbot_2xc/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/pndbotics_adam_lite/scene.xml' title='Open live preview for PNDbotics Adam_lite'><img src='assets/pndbotics_adam_lite-adam_lite.png' width=120></a> | PNDbotics Adam_lite | 25 | [MIT](pndbotics_adam_lite/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/apptronik_apollo/scene.xml' title='Open live preview for Apptronik Apollo'><img src='assets/apptronik_apollo-apptronik_apollo.png' width=120></a> | Apptronik Apollo | 32 | [Apache-2.0](apptronik_apollo/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/berkeley_humanoid/scene.xml' title='Open live preview for Berkeley Humanoid'><img src='assets/berkeley_humanoid-berkeley_humanoid.png' width=120></a> | Berkeley Humanoid | 12 | [BSD-3-Clause](berkeley_humanoid/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/fourier_n1/scene.xml' title='Open live preview for Fourier N1'><img src='assets/fourier_n1-n1.png' width=120></a> | Fourier N1 | 23 | [Apache-2.0](fourier_n1/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/toddlerbot_2xm/scene.xml' title='Open live preview for ToddlerBot 2XM'><img src='assets/toddlerbot_2xm-toddlerbot_2xm.png' width=120></a> | ToddlerBot 2XM | 44 | [MIT](toddlerbot_2xm/LICENSE) |
-
-**Quadrupeds.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/unitree_a1/scene.xml' title='Open live preview for Unitree A1'><img src='assets/unitree_a1-a1.png' width=120></a> | Unitree A1 | 12 | [BSD-3-Clause](unitree_a1/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/google_barkour_v0/scene.xml' title='Open live preview for Google Barkour v0'><img src='assets/google_barkour_v0-barkour_v0.png' width=120></a> | Google Barkour v0 | 12 | [Apache-2.0](google_barkour_v0/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/anybotics_anymal_b/scene.xml' title='Open live preview for ANYmal B'><img src='assets/anybotics_anymal_b-anymal_b.png' width=120></a> | ANYmal B | 12 | [BSD-3-Clause](anybotics_anymal_b/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/unitree_go1/scene.xml' title='Open live preview for Unitree Go1'><img src='assets/unitree_go1-go1.png' width=120></a> | Unitree Go1 | 12 | [BSD-3-Clause](unitree_go1/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/anybotics_anymal_c/scene.xml' title='Open live preview for ANYmal C'><img src='assets/anybotics_anymal_c-anymal_c.png' width=120></a> | ANYmal C | 12 | [BSD-3-Clause](anybotics_anymal_c/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/google_barkour_vb/scene.xml' title='Open live preview for Google Barkour vB'><img src='assets/google_barkour_vb-barkour_vb.png' width=120></a> | Google Barkour vB | 12 | [Apache-2.0](google_barkour_vb/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/unitree_go2/scene.xml' title='Open live preview for Unitree Go2'><img src='assets/unitree_go2-go2.png' width=120></a> | Unitree Go2 | 12 | [BSD-3-Clause](unitree_go2/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/boston_dynamics_spot/scene.xml' title='Open live preview for Boston Dynamics Spot'><img src='assets/boston_dynamics_spot-spot_arm.png' width=120></a> | Boston Dynamics Spot | 19 | [BSD-3-Clause](boston_dynamics_spot/LICENSE) |
-
-**Bipeds.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/agility_cassie/scene.xml' title='Open live preview for Agility Cassie'><img src='assets/agility_cassie-cassie.png' width=120></a> | Agility Cassie | 28 | [MIT](agility_cassie/LICENSE) |
-
-**Biomechanical.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/flybody/scene.xml' title='Open live preview for Flybody'><img src='assets/flybody-fruitfly.png' width=120></a> | Flybody | 102 | [Apache-2.0](flybody/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/iit_softfoot/scene.xml' title='Open live preview for IIT SoftFoot'><img src='assets/iit_softfoot-softfoot.png' width=120></a> | IIT SoftFoot | 92 | [BSD-3-Clause](iit_softfoot/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/ms_human_700/scene.xml' title='Open live preview for MS-Human-700'><img src='assets/ms_human_700-MS-Human-700.png' width=120></a> | MS-Human-700 | 85 | [Apache-2.0](ms_human_700/LICENSE) |
-
-**Dual Arms.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/aloha/scene.xml' title='Open live preview for ALOHA'><img src='assets/aloha-aloha.png' width=120></a> | ALOHA | 16 | [BSD-3-Clause](aloha/LICENSE) |
-
-**Mobile Manipulators.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/google_robot/scene.xml' title='Open live preview for Google Robot'><img src='assets/google_robot-robot.png' width=120></a> | Google Robot | 9 | [Apache-2.0](google_robot/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/hello_robot_stretch/scene.xml' title='Open live preview for Hello Robot Stretch 2'><img src='assets/hello_robot_stretch-stretch.png' width=120></a> | Hello Robot Stretch 2 | 17 | [BSD-3-Clause-Clear](hello_robot_stretch/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/stanford_tidybot/scene.xml' title='Open live preview for Stanford TidyBot'><img src='assets/stanford_tidybot-tidybot.png' width=120></a> | Stanford TidyBot | 18 | [MIT](stanford_tidybot/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/hello_robot_stretch_3/scene.xml' title='Open live preview for Hello Robot Stretch 3'><img src='assets/hello_robot_stretch_3-stretch.png' width=120></a> | Hello Robot Stretch 3 | 20 | [Apache-2.0](hello_robot_stretch_3/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/pal_tiago/scene_position.xml' title='Open live preview for TIAGo'><img src='assets/pal_tiago-tiago.png' width=120></a> | TIAGo | 22 | [Apache-2.0](pal_tiago/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/pal_tiago_dual/scene_position.xml' title='Open live preview for TIAGo++'><img src='assets/pal_tiago_dual-tiago_dual.png' width=120></a> | TIAGo++ | 25 | [Apache-2.0](pal_tiago_dual/LICENSE) |
-
-**Drones.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/skydio_x2/scene.xml' title='Open live preview for Skydio X2'><img src='assets/skydio_x2-x2.png' width=120></a> | Skydio X2 | 0 | [Apache-2.0](skydio_x2/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/bitcraze_crazyflie_2/scene.xml' title='Open live preview for Bitcraze Crazyflie 2'><img src='assets/bitcraze_crazyflie_2-cf2.png' width=120></a> | Bitcraze Crazyflie 2 | 0 | [MIT](bitcraze_crazyflie_2/LICENSE) |
-
-**Arms.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/franka_emika_panda/scene.xml' title='Open live preview for Franka Emika Panda'><img src='assets/franka_emika_panda-panda.png' width=120></a> | Franka Emika Panda | 9 | [Apache-2.0](franka_emika_panda/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/franka_fr3/scene.xml' title='Open live preview for Franka Robotics FR3'><img src='assets/franka_fr3-fr3.png' width=120></a> | Franka Robotics FR3 | 7 | [Apache-2.0](franka_fr3/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/ufactory_lite6/scene.xml' title='Open live preview for Lite 6'><img src='assets/ufactory_lite6-lite6.png' width=120></a> | Lite 6 | 6 | [BSD-3-Clause](ufactory_lite6/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/unitree_z1/scene.xml' title='Open live preview for Unitree Z1'><img src='assets/unitree_z1-z1.png' width=120></a> | Unitree Z1 | 6 | [BSD-3-Clause](unitree_z1/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/universal_robots_ur5e/scene.xml' title='Open live preview for Universal Robots UR5e'><img src='assets/universal_robots_ur5e-ur5e.png' width=120></a> | Universal Robots UR5e | 6 | [BSD-3-Clause](universal_robots_ur5e/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/rethink_robotics_sawyer/scene.xml' title='Open live preview for Rethink Robotics Sawyer'><img src='assets/rethink_robotics_sawyer-sawyer.png' width=120></a> | Rethink Robotics Sawyer | 7 | [Apache-2.0](rethink_robotics_sawyer/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/universal_robots_ur10e/scene.xml' title='Open live preview for Universal Robots UR10e'><img src='assets/universal_robots_ur10e-ur10e.png' width=120></a> | Universal Robots UR10e | 6 | [BSD-3-Clause](universal_robots_ur10e/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/kuka_iiwa_14/scene.xml' title='Open live preview for KUKA LBR iiwa 14'><img src='assets/kuka_iiwa_14-iiwa14.png' width=120></a> | KUKA LBR iiwa 14 | 7 | [BSD-3-Clause](kuka_iiwa_14/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/trossen_vx300s/scene.xml' title='Open live preview for ViperX 300 6DOF'><img src='assets/trossen_vx300s-vx300s.png' width=120></a> | ViperX 300 6DOF | 8 | [BSD-3-Clause](trossen_vx300s/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/ufactory_xarm7/scene.xml' title='Open live preview for xArm7'><img src='assets/ufactory_xarm7-xarm7.png' width=120></a> | xArm7 | 13 | [BSD-3-Clause](ufactory_xarm7/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/kinova_gen3/scene.xml' title='Open live preview for Kinova Gen3'><img src='assets/kinova_gen3-gen3.png' width=120></a> | Kinova Gen3 | 7 | [BSD-3-Clause](kinova_gen3/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/agilex_piper/scene.xml' title='Open live preview for AgileX PiPER'><img src='assets/agilex_piper-piper.png' width=120></a> | AgileX PiPER | 8 | [MIT](agilex_piper/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/flexiv_rizon4/scene.xml' title='Open live preview for Flexiv Robotics Rizon4'><img src='assets/flexiv_rizon4-flexiv_rizon4.png' width=120></a> | Flexiv Robotics Rizon4 | 7 | [Apache-2.0](flexiv_rizon4/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/arx_l5/scene.xml' title='Open live preview for ARX L5'><img src='assets/arx_l5-arx_l5.png' width=120></a> | ARX L5 | 8 | [BSD-3-Clause](arx_l5/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/flexiv_rizon4s/scene.xml' title='Open live preview for Flexiv Robotics Rizon4S'><img src='assets/flexiv_rizon4s-flexiv_rizon4s.png' width=120></a> | Flexiv Robotics Rizon4S | 7 | [Apache-2.0](flexiv_rizon4s/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/trossen_wx250s/scene.xml' title='Open live preview for WidowX 250 6DOF'><img src='assets/trossen_wx250s-wx250s.png' width=120></a> | WidowX 250 6DOF | 8 | [BSD-3-Clause](trossen_wx250s/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/trs_so_arm100/scene.xml' title='Open live preview for Standard Open Arm-100 5DOF - Version 1.3'><img src='assets/trs_so_arm100-so_arm100.png' width=120></a> | Standard Open Arm-100 5DOF - Version 1.3 | 6 | [Apache-2.0](trs_so_arm100/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/low_cost_robot_arm/scene.xml' title='Open live preview for Low-Cost Robot Arm'><img src='assets/low_cost_robot_arm-low_cost_robot_arm.png' width=120></a> | Low-Cost Robot Arm | 6 | [Apache-2.0](low_cost_robot_arm/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/i2rt_yam/scene.xml' title='Open live preview for Yet Another Manipulator (YAM)'><img src='assets/i2rt_yam-yam.png' width=120></a> | Yet Another Manipulator (YAM) | 8 | [MIT](i2rt_yam/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/seeed_rebot_devarm/scene.xml' title='Open live preview for Seeed Studio reBot DevArm'><img src='assets/seeed_rebot_devarm-seeed_rebot_devarm.png' width=120></a> | Seeed Studio reBot DevArm | 8 | [MIT](seeed_rebot_devarm/LICENSE) |
-
-**End-effectors.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/franka_emika_panda/hand.xml' title='Open live preview for Panda Gripper'><img src='assets/franka_emika_panda-hand.png' width=120></a> | Panda Gripper | 2 | [Apache-2.0](franka_emika_panda/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/wonik_allegro/scene_left.xml' title='Open live preview for Allegro Hand V3'><img src='assets/wonik_allegro-left_hand.png' width=120></a> | Allegro Hand V3 | 16 | [BSD-2-Clause](wonik_allegro/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/shadow_hand/scene_left.xml' title='Open live preview for Shadow Hand E3M5'><img src='assets/shadow_hand-left_hand.png' width=120></a> | Shadow Hand E3M5 | 24 | [Apache-2.0](shadow_hand/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/robotiq_2f85/scene.xml' title='Open live preview for Robotiq 2F-85'><img src='assets/robotiq_2f85-2f85.png' width=120></a> | Robotiq 2F-85 | 8 | [BSD-2-Clause](robotiq_2f85/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/ufactory_xarm7/hand.xml' title='Open live preview for xarm7 Gripper'><img src='assets/ufactory_xarm7-hand.png' width=120></a> | xarm7 Gripper | 6 | [BSD-3-Clause](ufactory_xarm7/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/shadow_dexee/scene.xml' title='Open live preview for Shadow DEX-EE Hand'><img src='assets/shadow_dexee-shadow_dexee.png' width=120></a> | Shadow DEX-EE Hand | 12 | [Apache-2.0](shadow_dexee/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/leap_hand/scene_left.xml' title='Open live preview for Leap Hand'><img src='assets/leap_hand-left_hand.png' width=120></a> | Leap Hand | 16 | [MIT](leap_hand/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/umi_gripper/scene.xml' title='Open live preview for UMI-Gripper'><img src='assets/umi_gripper-umi_gripper.png' width=120></a> | UMI-Gripper | 8 | [MIT](umi_gripper/LICENSE) |
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/sharpa_wave/scene_left.xml' title='Open live preview for Sharpa Wave'><img src='assets/sharpa_wave-left_hand.png' width=120></a> | Sharpa Wave | 22 | [Apache-2.0](sharpa_wave/LICENSE) |
-
-**Mobile Bases.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/robot_soccer_kit/scene.xml' title='Open live preview for Robot soccer kit omnidirectional'><img src='assets/robot_soccer_kit-robot_soccer_kit.png' width=120></a> | Robot soccer kit omnidirectional | 64 | [MIT](robot_soccer_kit/LICENSE) |
-
-**Miscellaneous.**
-
-| Preview | Name | DoFs | License |
-|:---:|---|---|---|
-| <a href='https://live.mujoco.org/?model=github:google-deepmind/mujoco_menagerie/main/realsense_d435i/d435i.xml' title='Open live preview for Realsense D435i'><img src='assets/realsense_d435i-d435i.png' width=120></a> | Realsense D435i | 0 | [Apache-2.0](realsense_d435i/LICENSE) |
-
-<!-- END MODELS -->
-
-## Citing Menagerie
-
-If you use Menagerie in your work, please use the following citation:
-
-```bibtex
-@software{menagerie2022github,
-  author = {Zakka, Kevin and Tassa, Yuval and {MuJoCo Menagerie Contributors}},
-  title = {{MuJoCo Menagerie: A collection of high-quality simulation models for MuJoCo}},
-  url = {http://github.com/google-deepmind/mujoco_menagerie},
-  year = {2022},
-}
-```
-
-## Acknowledgments
-
-The models in this repository are based on third-party models designed by many talented people, and would not have been possible without their generous open-source contributions. We would like to acknowledge all the designers and engineers who made MuJoCo Menagerie possible.
-
-We'd like to thank Pedro Vergani for his help with visuals and design.
-
-The main effort required to make this repository publicly available was undertaken by [Kevin Zakka](https://kzakka.com/), with help from the Robotics Simulation team at Google DeepMind.
-
-This project has also benefited from contributions by members of the broader community — see the [CONTRIBUTORS.md](./CONTRIBUTORS.md) for a full list.
-
-## Changelog
-
-For a summary of key updates across the repository, see the [global CHANGELOG.md](./CHANGELOG.md).
-
-Each individual model also includes its own `CHANGELOG.md` file with model-specific updates, linked directly from the corresponding README.
-
-## License and Disclaimer
-
-XML and asset files in each individual model directory of this repository are
-subject to different license terms. Please consult the `LICENSE` files under
-each specific model subdirectory for the relevant license and copyright
-information.
-
-All other content is Copyright 2022 DeepMind Technologies Limited and licensed
-under the Apache License, Version 2.0. A copy of this license is provided in the
-top-level LICENSE file in this repository.
-You can also obtain it from https://www.apache.org/licenses/LICENSE-2.0.
-
-This is not an officially supported Google product.
+The upstream MuJoCo Menagerie documentation that used to live here is preserved as
+[`MENAGERIE.md`](MENAGERIE.md). [`INDEX.html`](INDEX.html) is the same gallery in
+standalone HTML — open it locally in a browser, since GitHub displays HTML files as
+source rather than rendering them.
