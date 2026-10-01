@@ -13,7 +13,7 @@ run each robot offline.
 Open [`catalog/INDEX.html`](catalog/INDEX.html) — a gallery of all 68 robots with a
 rendered thumbnail, leg-count badge, and a link to the model XML. The same data is
 available as a table in [`catalog/INDEX.md`](catalog/INDEX.md), and the rendered
-images live in [`catalog/pictures/`](catalog/pictures/) (83 PNGs).
+images live in [`catalog/`](catalog/) alongside the model folders (83 PNGs).
 
 ## What's inside
 
