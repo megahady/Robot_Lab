@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MuJoCo Robot Viewer</title>
+<link rel="stylesheet" href="viewer.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app">
+  <aside id="panel">
+    <h1>Robot Viewer</h1>
+    <label for="model-select">Model</label>
+    <select id="model-select"></select>
+    <label for="speed">Speed <span id="speed-val">1.0x</span></label>
+    <input id="speed" type="range" min="0.05" max="3" step="0.05" value="1">
+    <div class="row">
+      <button id="play">Pause</button>
+      <button id="step">Step</button>
+      <button id="reset">Reset</button>
+    </div>
+    <div class="row">
+      <button id="screenshot">Snapshot</button>
+    </div>
+    <div class="meta">
+      <div><span id="stat-geoms">–</span> geoms</div>
+      <div><span id="stat-joints">–</span> joints</div>
+      <div><span id="stat-actuators">–</span> actuators</div>
+      <div><span id="stat-time">–</span> s</div>
+    </div>
+    <div id="msg"></div>
+    <a class="back" href="https://github.com/megahady/Robot_Lab/tree/main/catalog">← Robot_Lab catalog</a>
+  </aside>
+  <main id="stage">
+    <div id="overlay"><div class="spinner"></div><div id="overlay-text">loading…</div></div>
+  </main>
+</div>
+<script type="module" src="viewer.js"></script>
+</body>
+</html>
