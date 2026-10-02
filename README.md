@@ -10,9 +10,16 @@ run each robot offline.
 
 ## Browse the catalog
 
-Browse the catalog at **[`catalog/`](catalog/)** — a gallery of all 68 robots with a
-rendered thumbnail, leg-count badge, and a link to the model XML. GitHub renders it
-inline because it is the directory's `README.md`.
+Browse the catalog at **[`catalog/`](catalog/)** — a curated list of all 68 robots, laid
+out like an awesome-list: a gallery grid up top, then **12 categories** (Humanoids,
+Bipeds, Quadrupeds, Hexapods & Legs, Arms, Mobile Manipulators, End Effectors, Aerial,
+Hybrid, Educational, Sensors, Bio-inspired) with a table per category giving leg count,
+model file, license and upstream description.
+
+**Click any picture to run that robot in the online MuJoCo viewer** — physics compiled
+from this repository and streamed into the browser.
+
+GitHub renders it inline because it is the directory's `README.md`.
 
 Two equivalent copies exist for other contexts:
 
