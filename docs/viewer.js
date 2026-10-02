@@ -2,6 +2,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import MuJoCoModule from 'https://cdn.jsdelivr.net/npm/@mujoco/mujoco@3.14.0/mujoco.js';
 
+const GEOM = {
+  PLANE: 0, HFIELD: 1, SPHERE: 2, CAPSULE: 3,
+  ELLIPSOID: 4, CYLINDER: 5, BOX: 6, MESH: 7
+};
+
 const MUJOCO_BASE = 'https://cdn.jsdelivr.net/npm/@mujoco/mujoco@3.14.0/';
 const RAW_BASE = 'https://raw.githubusercontent.com/megahady/Robot_Lab/main/';
 const DEFAULT_MODEL = 'catalog/unitree_go2/go2.xml';
@@ -215,31 +220,41 @@ function geomGeometry(m, i) {
   const s0 = m.geom_size[i], s1 = m.geom_size[i + 1], s2 = m.geom_size[i + 2];
 
   switch (type) {
-    case mujoco.mjtGeom.mjGEOM_PLANE: {
+    case GEOM.PLANE: {
       const g = new THREE.PlaneGeometry(2 * Math.max(s0, 0.1), 2 * Math.max(s1, 0.1));
       g.rotateX(-Math.PI / 2);
       return g;
     }
-    case mujoco.mjtGeom.mjGEOM_SPHERE:
+    case GEOM.SPHERE:
       return new THREE.SphereGeometry(Math.max(s0, 1e-4), 32, 24);
-    case mujoco.mjtGeom.mjGEOM_CAPSULE:
+    case GEOM.CAPSULE:
       return new THREE.CapsuleGeometry(Math.max(s0, 1e-4), Math.max(2 * s1, 1e-5), 8, 24);
-    case mujoco.mjtGeom.mjGEOM_CYLINDER:
+    case GEOM.CYLINDER:
       return new THREE.CylinderGeometry(Math.max(s0, 1e-4), Math.max(s0, 1e-4), Math.max(2 * s1, 1e-5), 32);
-    case mujoco.mjtGeom.mjGEOM_ELLIPSOID: {
+    case GEOM.ELLIPSOID: {
       const g = new THREE.SphereGeometry(1, 32, 24);
       g.scale(Math.max(Math.abs(s0), 1e-4), Math.max(Math.abs(s1), 1e-4), Math.max(Math.abs(s2), 1e-4));
       return g;
     }
-    case mujoco.mjtGeom.mjGEOM_BOX:
+    case GEOM.BOX:
       return new THREE.BoxGeometry(2 * Math.max(Math.abs(s0), 1e-6), 2 * Math.max(Math.abs(s1), 1e-6), 2 * Math.max(Math.abs(s2), 1e-6));
-    case mujoco.mjtGeom.mjGEOM_MESH: {
+    case GEOM.MESH: {
       const mid = m.geom_dataid[i];
       if (mid < 0 || mid >= m.nmesh) return null;
       return meshGeometry(m, mid);
     }
     default:
       return null;
+  }
+}
+
+function modelName(m) {
+  try {
+    const raw = m && m.names;
+    if (!raw) return 'mujoco';
+    return new TextDecoder().decode(new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)).split('\0')[0] || 'mujoco';
+  } catch (err) {
+    return 'mujoco';
   }
 }
 
@@ -266,7 +281,7 @@ function buildScene(m) {
 
   actors = [];
   for (let i = 0; i < m.ngeom; i++) {
-    if (m.geom_type[i] === mujoco.mjtGeom.mjGEOM_HFIELD) continue;
+    if (m.geom_type[i] === GEOM.HFIELD) continue;
     const geo = geomGeometry(m, i);
     if (!geo) continue;
 
@@ -350,12 +365,14 @@ async function loadModel(modelPath) {
 
   try {
     if (model) {
-      mujoco.mj_deleteModel(model);
+      if (typeof model.delete === 'function') model.delete();
+      if (data && typeof data.delete === 'function') data.delete();
       model = null;
+      data = null;
     }
     const assetCount = await stage(modelPath);
     progress('compiling…');
-    model = mujoco.MjModel.fromXML('/root/' + modelPath);
+    model = mujoco.MjModel.from_xml_path('/root/' + modelPath);
     data = new mujoco.MjData(model);
     mujoco.mj_forward(model, data);
 
@@ -450,7 +467,7 @@ function wireControls() {
   el('screenshot').addEventListener('click', () => {
     renderer.render(scene, camera);
     const a = document.createElement('a');
-    a.download = (model ? model.names : 'mujoco') + '.png';
+    a.download = modelName(model) + '.png';
     a.href = renderer.domElement.toDataURL('image/png');
     a.click();
   });
