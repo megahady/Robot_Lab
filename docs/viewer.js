@@ -9,7 +9,7 @@ const GEOM = {
 
 const MUJOCO_BASE = 'https://cdn.jsdelivr.net/npm/@mujoco/mujoco@3.14.0/';
 const RAW_BASE = 'https://raw.githubusercontent.com/megahady/Robot_Lab/main/';
-const DEFAULT_MODEL = 'catalog/unitree_go2/go2.xml';
+const DEFAULT_MODEL = 'catalog/unitree_go2/scene.xml';
 
 const el = (id) => document.getElementById(id);
 const overlay = el('overlay');
@@ -119,6 +119,8 @@ async function gather(modelPath) {
     if (seen.has(p)) continue;
     seen.add(p);
     const text = new TextDecoder().decode(await fetchBytes(p));
+    // Scene files pull in the robot via <include>; the compiler still needs that XML in the VFS.
+    if (!found.has(p)) found.set(p, text);
     const more = await collectAssets(text, dirname(p), found, []);
     for (const m of more) {
       if (!seen.has(m)) queue.push(m);
@@ -148,6 +150,8 @@ async function stage(modelPath) {
   for (let i = 0; i < paths.length; i += batch) {
     const slice = paths.slice(i, i + batch);
     const blobs = await Promise.all(slice.map(async (p) => {
+      const cached = found.get(p);
+      if (typeof cached === 'string') return new TextEncoder().encode(cached);
       try {
         return await fetchBytes(p);
       } catch (err) {
@@ -403,10 +407,17 @@ async function populateModels() {
   try {
     const res = await fetch('models.json');
     const list = await res.json();
+    let group = null;
     for (const m of list) {
+      if (m.category && m.category !== group) {
+        group = m.category;
+        const og = document.createElement('optgroup');
+        og.label = group;
+        select.appendChild(og);
+      }
       const opt = document.createElement('option');
       opt.value = m.xml;
-      opt.textContent = m.name;
+      opt.textContent = m.dofs ? m.name + ' · ' + m.dofs + ' DoF' : m.name;
       select.appendChild(opt);
     }
     select.value = PARAM || DEFAULT_MODEL;
@@ -415,7 +426,7 @@ async function populateModels() {
   } catch (err) {
     const opt = document.createElement('option');
     opt.value = DEFAULT_MODEL;
-    opt.textContent = 'unitree_go2';
+    opt.textContent = 'Unitree Go2';
     select.appendChild(opt);
     select.addEventListener('change', () => loadModel(select.value));
   }

@@ -1,6 +1,6 @@
 # Robot_Lab
 
-A ready-to-run catalog of **68 robot models** for [MuJoCo](https://mujoco.org) physics
+A ready-to-run catalog of **68 robot models (70 scenes)** for [MuJoCo](https://mujoco.org) physics
 simulation, bundled with a visual gallery.
 
 The models themselves are an unmodified snapshot of
@@ -10,14 +10,27 @@ run each robot offline.
 
 ## Browse the catalog
 
-Browse the catalog at **[`catalog/`](catalog/)** — a curated list of all 68 robots, laid
-out like an awesome-list: a gallery grid up top, then **12 categories** (Humanoids,
-Bipeds, Quadrupeds, Hexapods & Legs, Arms, Mobile Manipulators, End Effectors, Aerial,
-Hybrid, Educational, Sensors, Bio-inspired) with a table per category giving leg count,
-model file, license and upstream description.
+Browse the catalog at **[`catalog/`](catalog/)** — 70 model entries across **11 upstream
+categories**, laid out exactly like
+[MuJoCo Menagerie](https://github.com/google-deepmind/mujoco_menagerie#menagerie-models):
 
-**Click any picture to run that robot in the online MuJoCo viewer** — physics compiled
-from this repository and streamed into the browser.
+```
+**Humanoids.**
+
+| Preview | Name | DoFs | License |
+|:---:|---|---|---|
+| <a href='…?model=catalog/unitree_h1/scene.xml' title='Open live preview for Unitree H1'>
+    <img src='assets/unitree_h1-h1.png' width=120></a> | Unitree H1 | 19 | [BSD-3-Clause](unitree_h1/LICENSE) |
+```
+
+Category assignment, display names, DoF counts and licenses are taken from upstream, so
+this list tracks Menagerie rather than duplicating it by hand. Thumbnails live in
+[`catalog/assets/`](catalog/assets/) as `<robot>-<model>.png`.
+
+**Click any thumbnail to run that robot in the online MuJoCo viewer** — the viewer loads
+the robot's **scene** file, so it arrives with its floor, lighting and skybox, and
+`<include>` plus `compiler` `meshdir`/`texturedir` are resolved recursively while staging
+assets.
 
 GitHub renders it inline because it is the directory's `README.md`.
 
@@ -29,13 +42,11 @@ Two equivalent copies exist for other contexts:
 | [`catalog/INDEX.md`](catalog/INDEX.md) | identical table for reading raw |
 | [`catalog/INDEX.html`](catalog/INDEX.html) | standalone gallery for a local browser (GitHub shows HTML as source) |
 
-The rendered images live in [`catalog/`](catalog/) alongside the model folders (83 PNGs).
-
 ## What's inside
 
 | | |
 | --- | --- |
-| Robots | 68 (humanoids, quadrupeds, hexapods, arms, grippers, drones, sensors) |
+| Robots | 70 model entries across 68 directories (incl. 2 gripper variants) |
 | Model formats | MJCF/XML (261 files), URDF (2 files) |
 | Meshes | OBJ, STL (2,428 files) |
 | Gallery images | 83 PNGs |
