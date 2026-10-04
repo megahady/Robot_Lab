@@ -144,7 +144,7 @@
     "category": "Biomechanical",
     "dofs": "102",
     "xml": "catalog/flybody/scene.xml",
-    "img": "assets/flybody-flybody_collision.png"
+    "img": "assets/flybody-flybody.png"
   },
   {
     "name": "IIT SoftFoot",
@@ -152,13 +152,6 @@
     "dofs": "92",
     "xml": "catalog/iit_softfoot/scene.xml",
     "img": "assets/iit_softfoot-softfoot.png"
-  },
-  {
-    "name": "MS-Human-700",
-    "category": "Biomechanical",
-    "dofs": "85",
-    "xml": "catalog/ms_human_700/scene.xml",
-    "img": "assets/ms_human_700-ms_human_render_front.png"
   },
   {
     "name": "ALOHA",
@@ -432,13 +425,6 @@
     "dofs": "6",
     "xml": "catalog/ufactory_xarm7/hand.xml",
     "img": "assets/ufactory_xarm7-xarm7.png"
-  },
-  {
-    "name": "Shadow DEX-EE Hand",
-    "category": "End-effectors",
-    "dofs": "12",
-    "xml": "catalog/shadow_dexee/scene.xml",
-    "img": "assets/shadow_dexee-shadow_dexee.png"
   },
   {
     "name": "Leap Hand",

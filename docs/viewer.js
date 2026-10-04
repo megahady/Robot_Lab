@@ -70,61 +70,79 @@ async function fetchBytes(path) {
   return new Uint8Array(await res.arrayBuffer());
 }
 
-async function collectAssets(xmlText, dir, found, queue) {
-  const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
-  if (doc.querySelector('parsererror')) throw new Error('malformed XML in ' + (dir || 'model'));
+// MuJoCo applies <compiler> settings to the whole model, and scene files often declare assets
+// that live under the *included* file's assetdir. So parse the full include tree first, merge
+// the compiler directories, and only then resolve asset references.
+function compilerDirs(doc) {
+  const c = doc.querySelector('compiler');
+  const get = (k) => (c && c.getAttribute(k)) || '';
+  const assetdir = get('assetdir');
+  return {
+    mesh: get('meshdir') || assetdir,
+    texture: get('texturedir') || assetdir,
+  };
+}
 
-  const compiler = doc.querySelector('compiler');
-  const meshdir = (compiler && compiler.getAttribute('meshdir')) || '';
-  const texturedir = (compiler && compiler.getAttribute('texturedir')) || '';
-
-  const refs = [];
-  for (const m of doc.querySelectorAll('mesh')) {
+function collectRefs(doc, dir, refs) {
+  for (const m of doc.querySelectorAll('mesh, skin')) {
     const f = m.getAttribute('file');
-    if (f) refs.push(joinPath(dir, meshdir, f));
+    if (f) refs.mesh.push(f);
   }
   for (const t of doc.querySelectorAll('texture')) {
     const f = t.getAttribute('file');
-    if (f) refs.push(joinPath(dir, texturedir, f));
+    if (f) refs.texture.push(f);
   }
   for (const h of doc.querySelectorAll('hfield')) {
     const f = h.getAttribute('file');
-    if (f) refs.push(joinPath(dir, '', f));
+    if (f) refs.hfield.push(f);
   }
-  for (const s of doc.querySelectorAll('skin')) {
-    const f = s.getAttribute('file');
-    if (f) refs.push(joinPath(dir, meshdir, f));
+  for (const el of doc.querySelectorAll('include, model')) {
+    const f = el.getAttribute('file');
+    if (f) refs.link.push(f);
   }
-  for (const inc of doc.querySelectorAll('include')) {
-    const f = inc.getAttribute('file');
-    if (f) queue.push(joinPath(dir, '', f));
-  }
+}
 
-  for (const r of refs) {
-    if (found.has(r)) continue;
-    found.set(r, null);
-  }
-  return queue;
+function parseXml(xmlText, label) {
+  const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+  if (doc.querySelector('parsererror')) throw new Error('malformed XML in ' + label);
+  return doc;
 }
 
 async function gather(modelPath) {
-  const found = new Map();
-  const seen = new Set();
-  const queue = [];
   const rootXml = new TextDecoder().decode(await fetchBytes(modelPath));
-  queue.push(...(await collectAssets(rootXml, dirname(modelPath), found, [])));
+  const rootDir = dirname(modelPath);
 
-  while (queue.length) {
-    const p = queue.shift();
-    if (seen.has(p)) continue;
-    seen.add(p);
-    const text = new TextDecoder().decode(await fetchBytes(p));
-    // Scene files pull in the robot via <include>; the compiler still needs that XML in the VFS.
-    if (!found.has(p)) found.set(p, text);
-    const more = await collectAssets(text, dirname(p), found, []);
-    for (const m of more) {
-      if (!seen.has(m)) queue.push(m);
+  // pass 1: walk includes, collecting every XML document and the compiler dirs in play
+  const xmls = [{ path: modelPath, dir: rootDir, text: rootXml }];
+  const seen = new Set([modelPath]);
+  const merged = { mesh: '', texture: '' };
+  for (let i = 0; i < xmls.length; i++) {
+    const doc = parseXml(xmls[i].text, xmls[i].path);
+    const d = compilerDirs(doc);
+    if (!merged.mesh && d.mesh) merged.mesh = d.mesh;
+    if (!merged.texture && d.texture) merged.texture = d.texture;
+    const refs = { mesh: [], texture: [], hfield: [], link: [] };
+    collectRefs(doc, xmls[i].dir, refs);
+    for (const f of refs.link) {
+      const p = joinPath(xmls[i].dir, '', f);
+      if (seen.has(p)) continue;
+      seen.add(p);
+      const text = new TextDecoder().decode(await fetchBytes(p));
+      xmls.push({ path: p, dir: dirname(p), text });
     }
+  }
+
+  // pass 2: resolve every asset reference against the merged dirs
+  const found = new Map();
+  const add = (p) => { if (!found.has(p)) found.set(p, null); };
+  for (const x of xmls) {
+    const doc = parseXml(x.text, x.path);
+    const refs = { mesh: [], texture: [], hfield: [], link: [] };
+    collectRefs(doc, x.dir, refs);
+    for (const f of refs.mesh) add(joinPath(x.dir, merged.mesh, f));
+    for (const f of refs.texture) add(joinPath(x.dir, merged.texture, f));
+    for (const f of refs.hfield) add(joinPath(x.dir, merged.texture, f));
+    if (x.path !== modelPath) found.set(x.path, x.text);
   }
   return { rootXml, found };
 }

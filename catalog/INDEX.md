@@ -65,9 +65,9 @@ Each directory in [`catalog/`](.) is self-contained: meshes in `assets/`, the sc
 
 | Preview | Name | DoFs | License |
 |:---:|---|---|---|
-| <a href='https://megahady.github.io/Robot_Lab/?model=catalog/flybody/scene.xml' title='Open live preview for Flybody'><img src='assets/flybody-flybody_collision.png' width=120></a> | Flybody | 102 | [Apache-2.0](flybody/LICENSE) |
+| <a href='https://megahady.github.io/Robot_Lab/?model=catalog/flybody/scene.xml' title='Open live preview for Flybody'><img src='assets/flybody-flybody.png' width=120></a> | Flybody | 102 | [Apache-2.0](flybody/LICENSE) |
 | <a href='https://megahady.github.io/Robot_Lab/?model=catalog/iit_softfoot/scene.xml' title='Open live preview for IIT SoftFoot'><img src='assets/iit_softfoot-softfoot.png' width=120></a> | IIT SoftFoot | 92 | [BSD-3-Clause](iit_softfoot/LICENSE) |
-| <a href='https://megahady.github.io/Robot_Lab/?model=catalog/ms_human_700/scene.xml' title='Open live preview for MS-Human-700'><img src='assets/ms_human_700-ms_human_render_front.png' width=120></a> | MS-Human-700 | 85 | [Apache-2.0](ms_human_700/LICENSE) |
+| <img src='assets/ms_human_700-ms_human_700.png' width=120 title='Not available in the browser viewer'> | MS-Human-700 | 85 | [Apache-2.0](ms_human_700/LICENSE) |
 
 **Dual Arms.**
 
@@ -132,7 +132,7 @@ Each directory in [`catalog/`](.) is self-contained: meshes in `assets/`, the sc
 | <a href='https://megahady.github.io/Robot_Lab/?model=catalog/shadow_hand/scene_left.xml' title='Open live preview for Shadow Hand E3M5'><img src='assets/shadow_hand-shadow_hand.png' width=120></a> | Shadow Hand E3M5 | 24 | [Apache-2.0](shadow_hand/LICENSE) |
 | <a href='https://megahady.github.io/Robot_Lab/?model=catalog/robotiq_2f85/scene.xml' title='Open live preview for Robotiq 2F-85'><img src='assets/robotiq_2f85-2f85.png' width=120></a> | Robotiq 2F-85 | 8 | [BSD-2-Clause](robotiq_2f85/LICENSE) |
 | <a href='https://megahady.github.io/Robot_Lab/?model=catalog/ufactory_xarm7/hand.xml' title='Open live preview for xarm7 Gripper'><img src='assets/ufactory_xarm7-xarm7.png' width=120></a> | xarm7 Gripper | 6 | [BSD-3-Clause](ufactory_xarm7/LICENSE) |
-| <a href='https://megahady.github.io/Robot_Lab/?model=catalog/shadow_dexee/scene.xml' title='Open live preview for Shadow DEX-EE Hand'><img src='assets/shadow_dexee-shadow_dexee.png' width=120></a> | Shadow DEX-EE Hand | 12 | [Apache-2.0](shadow_dexee/LICENSE) |
+| <img src='assets/shadow_dexee-shadow_dexee.png' width=120 title='Not available in the browser viewer'> | Shadow DEX-EE Hand | 12 | [Apache-2.0](shadow_dexee/LICENSE) |
 | <a href='https://megahady.github.io/Robot_Lab/?model=catalog/leap_hand/scene_left.xml' title='Open live preview for Leap Hand'><img src='assets/leap_hand-right_hand.png' width=120></a> | Leap Hand | 16 | [MIT](leap_hand/LICENSE) |
 | <a href='https://megahady.github.io/Robot_Lab/?model=catalog/umi_gripper/scene.xml' title='Open live preview for UMI-Gripper'><img src='assets/umi_gripper-umi_gripper.png' width=120></a> | UMI-Gripper | 8 | [MIT](umi_gripper/LICENSE) |
 | <a href='https://megahady.github.io/Robot_Lab/?model=catalog/sharpa_wave/scene_left.xml' title='Open live preview for Sharpa Wave'><img src='assets/sharpa_wave-sharpa_wave.png' width=120></a> | Sharpa Wave | 22 | [Apache-2.0](sharpa_wave/LICENSE) |
@@ -152,6 +152,13 @@ Each directory in [`catalog/`](.) is self-contained: meshes in `assets/`, the sc
 | <a href='https://megahady.github.io/Robot_Lab/?model=catalog/realsense_d435i/d435i.xml' title='Open live preview for Realsense D435i'><img src='assets/realsense_d435i-d435i.png' width=120></a> | Realsense D435i | 0 | [Apache-2.0](realsense_d435i/LICENSE) |
 
 <!-- END MODELS -->
+
+### Not available in the browser viewer
+
+Two models cannot be compiled by the stock `@mujoco/mujoco` 3.14.0 WASM build. They run fine from the Python bindings, where the plugin and heap are available:
+
+* **MS-Human-700** — exceeds the WASM heap; needs a build with `-sIMPORTED_MEMORY`
+* **Shadow DEX-EE Hand** — requires the compiled `mujoco.pid` plugin, absent from the stock build
 
 ## Adding a Robot
 
